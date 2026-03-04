@@ -2,229 +2,454 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reality Check Ajedrez | Diagnóstico Gratuito</title>
-
+<title>Test de Ajedrez</title>
 <style>
 body{
-background:linear-gradient(135deg,#0a0a2a,#1a1a3e);
-color:#f0f0f0;
-font-family:Segoe UI,Arial;
+  font-family:Arial, sans-serif;
+  background:#f2f2f2;
 }
-
 .container{
-max-width:1200px;
-margin:auto;
-padding:20px;
+  max-width:800px;
+  margin:40px auto;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
-
-header{
-text-align:center;
-padding:40px;
-background:#0a0a2a;
-border-radius:20px;
-border:3px solid #FFD700;
+h1{text-align:center;}
+#timer{
+  text-align:center;
+  font-size:22px;
+  margin-bottom:15px;
 }
-
-h1{color:#FFD700;font-size:2.8rem;}
-.subtitle{font-size:1.3rem;margin-top:10px;}
-
-.cta-button{
-display:inline-block;
-background:linear-gradient(to right,#FFD700,#FFA500);
-color:#000;
-padding:18px 45px;
-border-radius:50px;
-text-decoration:none;
-font-weight:bold;
-margin:15px;
-border:none;
-cursor:pointer;
+img{
+  width:100%;
+  max-height:350px;
+  object-fit:contain;
 }
-
-.features{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:25px;
-margin:50px 0;
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin: 20px 0;
 }
-
-.feature-card{
-background:#1a1a3e;
-padding:25px;
-border-radius:15px;
-border-top:5px solid #FFD700;
+.option{
+  background:#e6e6e6;
+  padding:12px;
+  border-radius:6px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: 100%;
 }
-
-.test-structure{
-background:#000;
-padding:40px;
-border-radius:20px;
+.option:hover{background:#d0d0d0;}
+.option input[type="checkbox"] {
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
-
-.test-columns{
-display:flex;
-flex-wrap:wrap;
-gap:25px;
+.option label {
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
 }
-
-.test-column{
-flex:1;
-background:#1a1a3e;
-padding:25px;
-border-radius:15px;
-border:1px solid #FFD700;
-text-align:center;
+button{
+  padding:10px 18px;
+  margin-top:15px;
 }
-
-.instructions{
-background:#0d2230;
-padding:30px;
-border-left:5px solid #00D4FF;
-border-radius:10px;
-margin-top:40px;
-}
-
-.step{
-margin:10px 0;
-}
-
-footer{
-margin-top:50px;
-text-align:center;
-color:#aaa;
-}
-
-.whatsapp-link{
-color:#25D366;
-text-decoration:none;
-font-weight:bold;
-}
+.hidden{display:none;}
 </style>
 </head>
-
 <body>
+
 <div class="container">
+<h1>Test de Ajedrez</h1>
+<div id="timer">20:00</div>
 
-<header>
-<h1>REALITY CHECK AJEDREZ</h1>
-<p class="subtitle">Diagnóstico gratuito para jugadores bajo 1000 Elo</p>
-<p class="subtitle">Descubre tus errores reales en menos de 30 minutos</p>
-
-<a href="#comenzar" class="cta-button">COMENZAR TEST GRATIS</a>
-</header>
-
-<section class="features">
-
-<div class="feature-card">
-<h3>🎯 Diagnóstico real</h3>
-<p>Detecta errores de cálculo, táctica, defensa y reconocimiento.</p>
+<!-- PANTALLA INICIO -->
+<div id="startScreen">
+<p>Nombre del estudiante:</p>
+<input type="text" id="studentName">
+<br><br>
+<button onclick="startQuiz()">Comenzar</button>
 </div>
 
-<div class="feature-card">
-<h3>⏱ Rápido</h3>
-<p>Dos pruebas cortas mejor que meses jugando blitz.</p>
+<!-- PANTALLA TEST -->
+<div id="quizScreen" class="hidden">
+<h3 id="questionNumber"></h3>
+<img id="questionImage">
+<p id="questionText"></p>
+<div id="options" class="options-grid"></div>
+<button onclick="nextQuestion()">Siguiente</button>
 </div>
 
-<div class="feature-card">
-<h3>📈 Enfoque práctico</h3>
-<p>Basado en posiciones reales.</p>
+<!-- RESULTADOS -->
+<div id="resultScreen" class="hidden">
+<h2>Resultados</h2>
+<p id="finalName"></p>
+<p id="finalScore"></p>
+<p id="finalLevel"></p>
+<p style="margin-top:10px;font-weight:bold;">Seleccione todo el texto del resultado, copie, pegue y envíe al siguiente correo electrónico: quizacademiamillennials@gmail.com</p>
+
+<h3>Estadística por pregunta</h3>
+<div id="review"></div>
 </div>
-
-</section>
-
-<section id="comenzar" class="test-structure">
-
-<h2 style="text-align:center;color:#FFD700;">Estructura del Diagnóstico</h2>
-
-<div class="test-columns">
-
-<!-- PRUEBA 1 -->
-<div class="test-column">
-<h3>🔍 Prueba 1: Identificación (30%)</h3>
-<p>15 posiciones</p>
-<p>Selección múltiple</p>
-<p>Reconocer qué debe hacerse</p>
-
-<button onclick="startTest1()" class="cta-button" style="width:100%;">
-Iniciar Prueba 1
-</button>
 </div>
-
-<!-- PRUEBA 2 -->
-<div class="test-column">
-<h3>⚡ Prueba 2: Ejecución (70%)</h3>
-<p>15 ejercicios prácticos</p>
-<p>Arrastrar piezas</p>
-
-<a href="#stepguide" class="cta-button" 
-style="width:100%;background:#00D4FF;color:black;">
-Ver Instrucciones
-</a>
-</div>
-
-</div>
-</section>
-
-<!-- GUIA STEPCHESS -->
-
-<section id="stepguide" class="instructions">
-
-<h3>Guía Prueba 2 – Stepchess</h3>
-
-<div class="step">1) Abrir este enlace:</div>
-
-<div class="step">
-<a href="https://stepchess.ru/control_test/33317" 
-target="_blank" style="color:#FFD700;">
-https://stepchess.ru/control_test/33317
-</a>
-</div>
-
-<div class="step">2) Traducir página al español</div>
-<div class="step">3) Iniciar sesión con Lichess</div>
-<div class="step">4) Resolver los 15 ejercicios</div>
-<div class="step">5) Guardar o capturar resultado</div>
-
-</section>
-
-<section class="instructions">
-
-<h3>📨 Envío de resultados</h3>
-
-<div class="step">1) Complete Prueba 1</div>
-<div class="step">2) Copie el resultado que aparece</div>
-<div class="step">3) Envíelo al correo: quizacademiamillennials@gmail.com</div>
-<div class="step">4) Complete Prueba 2 en Stepchess</div>
-<div class="step">5) Envíe captura del resultado al mismo correo</div>
-
-</section>
-
-<section class="instructions">
-
-<h3>📱 Contacto directo</h3>
-
-<p>
-<a class="whatsapp-link" 
-href="https://wa.me/573202311363" target="_blank">
-WhatsApp: +57 320 2311363
-</a>
-</p>
-
-</section>
-
-<footer>
-<p>Millennials Chess Academy</p>
-<p>Reality Check Ajedrez</p>
-</footer>
-
 </div>
 
 <script>
-function startTest1(){
-window.open("https://millennialschess.github.io/quiz/","_blank");
-}
-</script>
 
+/************************************************
+ EDITA MANUALMENTE CADA PREGUNTA AQUÍ
+*************************************************/
+
+const questions = [
+
+{
+  image:"img/p1.png",
+  text:"1. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "1. Ganar material",
+    "2. Dar mate en un movimiento",
+    "3. Defender",
+    "4. Son tablas por ahogado"
+  ],
+  correct:2
+},
+
+{
+  image:"img/p2.png",
+  text:"2. En esta posición ¿Qué debe hacer el blanco?",
+  options:[
+    "1. Ganar material",
+    "2. Dar mate en un movimiento",
+    "3. Defender",
+    "4. Son tablas por ahogado"
+  ],
+  correct:2
+},
+
+{
+  image:"img/p3.png",
+  text:"3. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "1. Ganar material",
+    "2. Dar mate en un movimiento",
+    "3. Defender",
+    "4. Son tablas por ahogado"
+  ],
+  correct:2
+},
+
+{
+  image:"img/p4.png",
+  text:"4. ¿En esta posición qué debe hacer el negro?",
+  options:[
+    "1. Ganar material",
+    "2. Dar mate en un movimiento",
+    "3. Defender",
+    "4. Son tablas por ahogado"
+  ],
+  correct:0
+},
+
+{
+  image:"img/p5.png",
+  text:"5. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "1. Ganar material",
+    "2. Dar mate en un movimiento",
+    "3. Defender",
+    "4. Son tablas por ahogado"
+  ],
+  correct:3
+},
+
+{
+  image:"img/p6.png",
+  text:"6. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "A) Avanzar el peón 1. h7",
+    "B) No permitir que el rey negro ataque el peón blanco 1. Rh5",
+    "C) No permitir que el rey negro penetre en el campo blanco 1. Rf4",
+    "D) Nada, porque el rey negro capturará el peón."
+  ],
+  correct:1
+},
+
+{
+  image:"img/p7.png",
+  text:"7. ¿En esta posición qué debe hacer el negro?",
+  options:[
+    "1. Ganar material",
+    "2. Dar mate en un movimiento",
+    "3. Defender",
+    "4. Son tablas por ahogado"
+  ],
+  correct:0
+},
+
+{
+  image:"img/p8.png",
+  text:"8. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "A) Ganar material con 1. Axc1",
+    "B) Ganar material con 1. Axa3",
+    "C) Defender",
+    "D) Son tablas por ahogado"
+  ],
+  correct:0
+},
+
+{
+  image:"img/p9.png",
+  text:"9. ¿En esta posición qué debe hacer el negro?",
+  options:[
+    "A) Ganar material con 1. Dxg5",
+    "B) Ganar material con 1. Txg5",
+    "C) Escapar con la dama 1. Dh6",
+    "D) Atacar el caballo con 1. f5"
+  ],
+  correct:1
+},
+
+{
+  image:"img/p10.png",
+  text:"10. En esta posición ¿Qué debe hacer el negro?",
+  options:[
+    "A. Ganar material",
+    "B. Dar mate en un movimiento",
+    "C. Defender",
+    "D. Son tablas por ahogado"
+  ],
+  correct:3
+},
+
+{
+  image:"img/p11.png",
+  text:"11. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "A. Ganar material",
+    "B. Dar mate en un movimiento",
+    "C. Defender",
+    "D. Son tablas por ahogado"
+  ],
+  correct:1
+},
+
+{
+  image:"img/p12.png",
+  text:"12. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "A. Ganar material",
+    "B. Dar mate en un movimiento",
+    "C. Defender",
+    "D. Son tablas por ahogado"
+  ],
+  correct:1
+},
+
+{
+  image:"img/p13.png",
+  text:"13. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "A. Ganar material",
+    "B. Dar mate en un movimiento",
+    "C. Defender",
+    "D. Son tablas por ahogado"
+  ],
+  correct:3
+},
+
+{
+  image:"img/p14.png",
+  text:"14. ¿En esta posición qué debe hacer el blanco?",
+  options:[
+    "A) Ganar material",
+    "B) Dar mate en un movimiento",
+    "C) Defender",
+    "D) Son tablas por ahogado."
+  ],
+  correct:1
+},
+
+{
+  image:"img/p15.png",
+  text:"15. ¿En esta posición qué debe hacer el negro?",
+  options:[
+    "A. Ganar material",
+    "B. Dar mate en un movimiento",
+    "C. Defender",
+    "D. Son tablas por ahogado"
+  ],
+  correct:2
+}
+
+// AGREGA MÁS PREGUNTAS COPIANDO ESTE BLOQUE
+
+];
+
+/************************************************/
+
+let currentQuestion = 0;
+let answers = [];
+let time = 1200; // 20 minutos
+let timer;
+let student = "";
+
+function startQuiz(){
+  student = document.getElementById("studentName").value;
+  if(student === ""){
+    alert("Ingrese su nombre");
+    return;
+  }
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("quizScreen").classList.remove("hidden");
+  startTimer();
+  loadQuestion();
+}
+
+function startTimer(){
+  timer = setInterval(() => {
+    time--;
+    let m = Math.floor(time/60);
+    let s = time % 60;
+    document.getElementById("timer").innerText =
+      `${m}:${s.toString().padStart(2,'0')}`;
+    if(time <= 0) finishQuiz();
+  },1000);
+}
+
+function loadQuestion(){
+  let q = questions[currentQuestion];
+  document.getElementById("questionNumber").innerText =
+    `Pregunta ${currentQuestion+1} de ${questions.length}`;
+  document.getElementById("questionImage").src = q.image;
+  document.getElementById("questionText").innerText = q.text;
+
+  let optDiv = document.getElementById("options");
+  optDiv.innerHTML = "";
+
+  q.options.forEach((opt,i)=>{
+    let div = document.createElement("div");
+    div.className = "option";
+    
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = `opt_${i}`;
+    checkbox.value = i;
+    checkbox.onchange = () => updateSelectedOption(i, checkbox);
+    
+    let label = document.createElement("label");
+    label.htmlFor = `opt_${i}`;
+    label.innerText = opt;
+    
+    div.appendChild(checkbox);
+    div.appendChild(label);
+    
+    // Hacer que al hacer clic en el div también se active el checkbox
+    div.onclick = (e) => {
+      if (e.target.tagName !== 'INPUT') {
+        checkbox.checked = !checkbox.checked;
+        updateSelectedOption(i, checkbox);
+      }
+    };
+    
+    optDiv.appendChild(div);
+  });
+}
+
+function updateSelectedOption(index, checkbox) {
+  // Si es el checkbox que se está marcando
+  if (checkbox.checked) {
+    // Desmarcar todos los otros checkboxes
+    document.querySelectorAll('#options input[type="checkbox"]').forEach((cb, i) => {
+      if (i !== index) {
+        cb.checked = false;
+      }
+    });
+    answers[currentQuestion] = index;
+  } else {
+    // Si se desmarca y era la respuesta seleccionada, eliminarla
+    if (answers[currentQuestion] === index) {
+      answers[currentQuestion] = null;
+    }
+  }
+}
+
+function nextQuestion(){
+  if(answers[currentQuestion] == null){
+    alert("Seleccione una respuesta");
+    return;
+  }
+  currentQuestion++;
+  if(currentQuestion >= questions.length){
+    finishQuiz();
+  } else {
+    loadQuestion();
+  }
+}
+
+function finishQuiz(){
+  clearInterval(timer);
+
+  let score = 0;
+  questions.forEach((q,i)=>{
+    if(q.correct === answers[i]) score++;
+  });
+
+  let level = "";
+  if(score <= 5) level = "Necesitas empezar nuestro curso desde 0";
+  else if(score <= 9) level = "Lo hiciste bien pero hace falta hacer nuestro curso para mejorar";
+  else if(score <= 12) level = "Excelente, ya casi superas los 1100. Haz el curso para afianzar conocimientos";
+  else level = "Ya estás en otro nivel";
+
+  document.getElementById("quizScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+
+  document.getElementById("finalName").innerText = "Nombre: " + student;
+  document.getElementById("finalScore").innerText =
+    `Puntaje: ${score} / ${questions.length}`;
+  document.getElementById("finalLevel").innerText = "Nivel: " + level;
+
+  // Estadística por pregunta
+  let review = document.getElementById("review");
+  review.innerHTML = "";
+
+  let emailBody = `Nombre: ${student}
+Puntaje: ${score}/${questions.length}
+Nivel: ${level}
+
+`;
+
+  questions.forEach((q,i)=>{
+    let correcta = q.correct === answers[i];
+
+    let p = document.createElement("p");
+    p.textContent = `Pregunta ${i+1}: ${correcta ? "Correcta" : "Incorrecta"}`;
+    p.style.color = correcta ? "green" : "red";
+    review.appendChild(p);
+
+    emailBody += `Pregunta ${i+1}: ${q.text}
+`;
+    emailBody += `Respuesta alumno: ${answers[i] !== undefined ? q.options[answers[i]] : 'Sin respuesta'}
+`;
+    emailBody += `Respuesta correcta: ${q.options[q.correct]}
+
+`;
+  });
+
+  // Enviar correo
+  let subject = "Resultados Test de Ajedrez";
+  window.location.href =
+    "mailto:quizacademiamillennials@gmail.com" +
+    `?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+}
+
+</script>
 </body>
 </html>

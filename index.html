@@ -1,273 +1,651 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reality Check Ajedrez | Diagnóstico Gratuito</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Reality Check Ajedrez | Diagnóstico Gratuito</title>
+    <style>
+        /* ===== VARIABLES Y RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-body{
-background:linear-gradient(135deg,#0a0a2a,#1a1a3e);
-color:#f0f0f0;
-font-family:Segoe UI,Arial;
-}
+        :root {
+            /* Colores principales basados en el logo */
+            --primary-blue: #1a237e;      /* Azul oscuro del logo */
+            --secondary-blue: #283593;     /* Azul medio */
+            --accent-blue: #3949ab;         /* Azul claro */
+            --gold-primary: #ffc107;        /* Dorado principal */
+            --gold-secondary: #ffb300;       /* Dorado medio */
+            --gold-light: #ffd54f;           /* Dorado claro */
+            --dark-bg: #0a0f2a;              /* Fondo oscuro */
+            --text-light: #ffffff;
+            --text-muted: #e0e0e0;
+            --success: #4caf50;
+            --whatsapp: #25D366;
+        }
 
-.container{
-max-width:1200px;
-margin:auto;
-padding:20px;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #151e3a 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
 
-header{
-text-align:center;
-padding:40px;
-background:#0a0a2a;
-border-radius:20px;
-border:3px solid #FFD700;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
 
-h1{color:#FFD700;font-size:2.8rem;}
-.subtitle{font-size:1.3rem;margin-top:10px;}
+        /* ===== HEADER CON LOGO ===== */
+        .header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(145deg, var(--primary-blue), var(--secondary-blue));
+            border-radius: 30px;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border: 2px solid var(--gold-primary);
+            position: relative;
+            overflow: hidden;
+        }
 
-.cta-button{
-display:inline-block;
-background:linear-gradient(to right,#FFD700,#FFA500);
-color:#000;
-padding:18px 45px;
-border-radius:50px;
-text-decoration:none;
-font-weight:bold;
-margin:15px;
-border:none;
-cursor:pointer;
-}
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,193,7,0.1) 0%, transparent 70%);
+            animation: shine 10s infinite linear;
+        }
 
-.features{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:25px;
-margin:50px 0;
-}
+        @keyframes shine {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-.feature-card{
-background:#1a1a3e;
-padding:25px;
-border-radius:15px;
-border-top:5px solid #FFD700;
-}
+        .logo-text {
+            position: relative;
+            z-index: 2;
+        }
 
-.test-structure{
-background:#000;
-padding:40px;
-border-radius:20px;
-}
+        .logo-text h1 {
+            font-size: clamp(2rem, 8vw, 4.5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--gold-primary), #ffeb3b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0.5rem;
+        }
 
-.test-columns{
-display:flex;
-flex-wrap:wrap;
-gap:25px;
-}
+        .logo-text h2 {
+            font-size: clamp(1.5rem, 5vw, 2.8rem);
+            color: var(--text-light);
+            text-shadow: 0 0 10px rgba(255,193,7,0.5);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
 
-.test-column{
-flex:1;
-min-width:280px;
-background:#1a1a3e;
-padding:25px;
-border-radius:15px;
-border:1px solid #FFD700;
-}
+        .logo-subtitle {
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            color: var(--gold-light);
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
 
-.instructions{
-background:#0d2230;
-padding:30px;
-border-left:5px solid #00D4FF;
-border-radius:10px;
-margin-top:40px;
-}
+        .header .cta-button {
+            margin-top: 2rem;
+        }
 
-.step{
-margin:10px 0;
-}
+        /* ===== TÍTULOS ===== */
+        h2 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: var(--gold-primary);
+            text-align: center;
+            margin: 2rem 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            padding-bottom: 1rem;
+        }
 
-footer{
-margin-top:50px;
-text-align:center;
-color:#aaa;
-}
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--gold-primary), transparent);
+        }
 
-.whatsapp-link{
-color:#25D366;
-text-decoration:none;
-font-weight:bold;
-}
-</style>
+        h3 {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            color: var(--gold-light);
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* ===== BOTONES ===== */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(145deg, var(--gold-primary), var(--gold-secondary));
+            color: var(--primary-blue);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 2px solid var(--gold-light);
+            box-shadow: 0 5px 15px rgba(255,193,7,0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: fit-content;
+            margin: 0.5rem auto;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,193,7,0.5);
+            background: linear-gradient(145deg, var(--gold-secondary), var(--gold-primary));
+        }
+
+        .cta-button:active {
+            transform: translateY(2px);
+        }
+
+        .whatsapp-button {
+            background: linear-gradient(145deg, var(--whatsapp), #128C7E);
+            color: white;
+            border-color: #075E54;
+            box-shadow: 0 5px 15px rgba(37,211,102,0.3);
+        }
+
+        .whatsapp-button:hover {
+            box-shadow: 0 8px 25px rgba(37,211,102,0.5);
+        }
+
+        /* ===== CARACTERÍSTICAS ===== */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, var(--secondary-blue), var(--primary-blue));
+            padding: 2rem;
+            border-radius: 20px;
+            border-top: 5px solid var(--gold-primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--gold-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* ===== ESTRUCTURA DE TESTS ===== */
+        .test-structure {
+            background: linear-gradient(145deg, #0f1740, var(--primary-blue));
+            padding: 2rem;
+            border-radius: 30px;
+            margin: 3rem 0;
+            border: 2px solid var(--gold-primary);
+        }
+
+        .test-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .test-column {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid var(--gold-light);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .test-column:hover {
+            border-color: var(--gold-primary);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255,193,7,0.2);
+        }
+
+        .test-column h3 {
+            color: var(--gold-primary);
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-column p {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            color: var(--text-muted);
+        }
+
+        /* ===== SECCIONES DE INSTRUCCIONES ===== */
+        .instructions {
+            background: linear-gradient(145deg, #1a1f4a, #0f1740);
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            border-left: 5px solid var(--gold-primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .step {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem 1.5rem;
+            margin: 0.8rem 0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255,193,7,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            border-color: var(--gold-primary);
+            transform: translateX(5px);
+        }
+
+        .step strong {
+            color: var(--gold-primary);
+        }
+
+        /* ===== ENLACES ===== */
+        a {
+            color: var(--gold-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--gold-primary);
+        }
+
+        .test-link {
+            display: inline-block;
+            color: var(--gold-primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            word-break: break-all;
+            padding: 0.5rem 1rem;
+            background: rgba(255,193,7,0.1);
+            border-radius: 10px;
+            margin: 0.5rem 0;
+        }
+
+        .test-link:hover {
+            background: rgba(255,193,7,0.2);
+        }
+
+        /* ===== CORREO DESTACADO ===== */
+        .email-highlight {
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            color: var(--gold-primary);
+            font-weight: bold;
+            background: rgba(255,193,7,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 1rem 0;
+            word-break: break-all;
+            border: 2px dashed var(--gold-primary);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            background: linear-gradient(145deg, var(--primary-blue), #0f1740);
+            border-radius: 20px;
+            color: var(--text-muted);
+            border: 1px solid var(--gold-light);
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        /* ===== UTILIDADES ===== */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 2rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 2rem;
+        }
+
+        .highlight {
+            color: var(--gold-primary);
+            font-weight: bold;
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+                border-radius: 20px;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .test-structure {
+                padding: 1rem;
+            }
+
+            .test-column {
+                padding: 1.5rem;
+            }
+
+            .step {
+                padding: 0.8rem 1rem;
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text h1 {
+                font-size: 2.2rem;
+            }
+
+            .logo-text h2 {
+                font-size: 1.5rem;
+            }
+
+            .logo-subtitle {
+                font-size: 0.9rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            h3 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* ===== SCROLL PERSONALIZADO ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-blue);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-secondary);
+        }
+    </style>
 </head>
 
 <body>
+    <div class="container">
+        <!-- HEADER CON LOGO -->
+        <header class="header">
+            <div class="logo-text">
+                <h1># MILLENNIALS</h1>
+                <h2>CHESS</h2>
+                <div class="logo-subtitle">Escuela de Ajedrez para Jóvenes Talentos</div>
+            </div>
+            
+            <p class="subtitle" style="font-size: clamp(1.1rem, 4vw, 1.4rem); margin: 1.5rem 0; color: var(--text-light);">
+                Diagnóstico gratuito para jugadores bajo 1000 Elo
+            </p>
+            
+            <p style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--gold-light);">
+                Descubre tus errores reales en menos de 30 minutos
+            </p>
+            
+            <a href="#comenzar" class="cta-button pulse">
+                COMENZAR TEST GRATIS
+            </a>
+        </header>
 
-<div class="container">
+        <!-- BENEFICIOS -->
+        <section class="features">
+            <div class="feature-card">
+                <h3>🎯 Diagnóstico real</h3>
+                <p>Identificamos fallas en visión táctica, cálculo, ejecución y reconocimiento de patrones.</p>
+            </div>
 
-<header>
-<h1>REALITY CHECK AJEDREZ</h1>
+            <div class="feature-card">
+                <h3>⏱️ Rápido y preciso</h3>
+                <p>Dos pruebas cortas revelan más que meses jugando partidas blitz sin análisis.</p>
+            </div>
 
-<p class="subtitle">
-Diagnóstico gratuito para jugadores bajo 1000 Elo
-</p>
+            <div class="feature-card">
+                <h3>📈 Enfoque práctico</h3>
+                <p>Basado en posiciones reales de partidas y decisiones que marcan la diferencia.</p>
+            </div>
+        </section>
 
-<p class="subtitle">
-Descubre tus errores reales en menos de 30 minutos
-</p>
+        <!-- ESTRUCTURA DE TESTS -->
+        <section id="comenzar" class="test-structure">
+            <h2>Estructura del Diagnóstico</h2>
+            
+            <div class="test-columns">
+                <!-- PRUEBA 1 -->
+                <div class="test-column">
+                    <h3>🔍 Prueba 1: Identificación</h3>
+                    <p><span class="highlight">15 posiciones</span></p>
+                    <p>Selección múltiple</p>
+                    <p>Reconocer la mejor jugada</p>
+                    <p style="color: var(--gold-light);">30% del diagnóstico</p>
+                    
+                    <a href="https://millennialschess.github.io/quiz/" 
+                       target="_blank" 
+                       class="cta-button" 
+                       style="margin-top: 1.5rem;">
+                        Iniciar Prueba 1
+                    </a>
+                    
+                    <div style="margin-top: 1rem;">
+                        <small>Enlace directo:</small><br>
+                        <a href="https://millennialschess.github.io/quiz/" 
+                           target="_blank" 
+                           class="test-link">
+                            millennialschess.github.io/quiz
+                        </a>
+                    </div>
+                </div>
 
-<a href="#comenzar" class="cta-button">
-COMENZAR TEST GRATIS
-</a>
+                <!-- PRUEBA 2 -->
+                <div class="test-column">
+                    <h3>⚡ Prueba 2: Ejecución</h3>
+                    <p><span class="highlight">15 ejercicios prácticos</span></p>
+                    <p>Arrastrar piezas</p>
+                    <p>Jugada correcta en cada posición</p>
+                    <p style="color: var(--gold-light);">70% del diagnóstico</p>
+                    
+                    <a href="https://millennialschess.github.io/Prueba_Ejecucion-1000/" 
+                       target="_blank" 
+                       class="cta-button" 
+                       style="margin-top: 1.5rem; background: linear-gradient(145deg, #00D4FF, #0099CC);">
+                        Iniciar Prueba 2
+                    </a>
+                    
+                    <div style="margin-top: 1rem;">
+                        <small>Enlace directo:</small><br>
+                        <a href="https://millennialschess.github.io/Prueba_Ejecucion-1000/" 
+                           target="_blank" 
+                           class="test-link">
+                            millennialschess.github.io/Prueba_Ejecucion-1000
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-</header>
+        <!-- INSTRUCCIONES RÁPIDAS -->
+        <section class="instructions">
+            <h3>📋 Instrucciones rápidas</h3>
+            
+            <div class="step">
+                <strong>1️⃣</strong> Complete la <strong>Prueba 1 (Identificación)</strong> haciendo clic en el botón de arriba
+            </div>
+            
+            <div class="step">
+                <strong>2️⃣</strong> Al finalizar, copie el texto con sus resultados
+            </div>
+            
+            <div class="step">
+                <strong>3️⃣</strong> Complete la <strong>Prueba 2 (Ejecución)</strong> directamente en nuestra plataforma
+            </div>
+            
+            <div class="step">
+                <strong>4️⃣</strong> Al terminar la Prueba 2, copie también sus resultados
+            </div>
+        </section>
 
-<!-- BENEFICIOS -->
+        <!-- ENVÍO DE RESULTADOS -->
+        <section class="instructions">
+            <h3>📨 Envío de resultados</h3>
+            
+            <div class="step">
+                <strong>Paso 1:</strong> Copie los resultados de <strong>ambas pruebas</strong>
+            </div>
+            
+            <div class="step">
+                <strong>Paso 2:</strong> Péguelos en un correo electrónico y envíelos a:
+            </div>
+            
+            <div class="email-highlight">
+                📧 quizacademiamillennials@gmail.com
+            </div>
+            
+            <div class="step">
+                <strong>Importante:</strong> Incluya en el asunto: "Resultados Reality Check - [Su nombre]"
+            </div>
+        </section>
 
-<section class="features">
+        <!-- CONTACTO WHATSAPP -->
+        <section class="instructions">
+            <h3>📱 Contacto directo</h3>
+            
+            <p style="font-size: 1.2rem; margin-bottom: 1.5rem; text-align: center;">
+                ¿Dudas? ¿Preguntas? Escríbenos directamente
+            </p>
+            
+            <div style="text-align: center;">
+                <a href="https://wa.me/573202311363" 
+                   target="_blank" 
+                   class="cta-button whatsapp-button"
+                   style="background: linear-gradient(145deg, #25D366, #128C7E);">
+                    📱 WhatsApp: +57 320 2311363
+                </a>
+            </div>
+            
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
+                Respuesta en máximo 24 horas hábiles
+            </p>
+        </section>
 
-<div class="feature-card">
-<h3>🎯 Diagnóstico real</h3>
-<p>Identificamos fallas en visión táctica, cálculo, ejecución y reconocimiento.</p>
-</div>
+        <!-- PIE DE PÁGINA -->
+        <footer>
+            <p>♜ Millennials Chess Academy ♞</p>
+            <p>Formando a los futuros campeones</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                Reality Check Ajedrez - Diagnóstico especializado para jugadores en desarrollo
+            </p>
+            <p style="margin-top: 1rem; color: var(--gold-light);">
+                © 2024 Millennials Chess - Todos los derechos reservados
+            </p>
+        </footer>
+    </div>
 
-<div class="feature-card">
-<h3>⏱ Rápido</h3>
-<p>Dos pruebas cortas revelan más que meses jugando blitz.</p>
-</div>
+    <!-- Smooth scroll para enlaces internos -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
 
-<div class="feature-card">
-<h3>📈 Enfoque práctico</h3>
-<p>Basado en posiciones reales y decisiones reales.</p>
-</div>
-
-</section>
-
-<!-- ESTRUCTURA -->
-
-<section id="comenzar" class="test-structure">
-
-<h2 style="text-align:center;color:#FFD700;">
-Estructura del Diagnóstico
-</h2>
-
-<div class="test-columns">
-
-<!-- PRUEBA 1 -->
-
-<div class="test-column">
-
-<h3>🔍 Prueba 1: Identificación (30%)</h3>
-
-<p>15 posiciones</p>
-<p>Selección múltiple</p>
-<p>Reconocer la mejor jugada</p>
-
-<button onclick="startTest1()" class="cta-button" style="width:100%;">
-Iniciar Prueba 1
-</button>
-
-</div>
-
-<!-- PRUEBA 2 -->
-
-<div class="test-column">
-
-<h3>⚡ Prueba 2: Ejecución (70%)</h3>
-
-<p>15 ejercicios prácticos</p>
-<p>Arrastrar piezas</p>
-
-<a href="#stepguide" 
-class="cta-button" 
-style="width:100%;background:#00D4FF;color:black;">
-Ver Instrucciones
-</a>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- GUIA STEPCHESS -->
-
-<section id="stepguide" class="instructions">
-
-<h3>Guía Prueba 2 – Stepchess</h3>
-
-<div class="step">1) Abrir este enlace:</div>
-
-<div class="step">
-<a href="https://stepchess.com/control_test/11377"
-target="_blank"
-style="color:#FFD700;">
-https://stepchess.ru/control_test/33317
-</a>
-</div>
-
-<div class="step">2) Traducir página al español</div>
-<div class="step">3) Iniciar sesión con Lichess</div>
-<div class="step">4) Resolver los 15 ejercicios</div>
-<div class="step">5) Guardar o capturar resultado</div>
-
-</section>
-
-<!-- ENVÍO -->
-
-<section class="instructions">
-
-<h3>📨 Envío de resultados</h3>
-
-<div class="step">1) Complete Prueba 1</div>
-<div class="step">2) Copie el resultado que aparece</div>
-<div class="step">3) Envíelo al correo:</div>
-
-<div class="step">
-<strong>quizacademiamillennials@gmail.com</strong>
-</div>
-
-<div class="step">4) Complete Prueba 2 en Stepchess</div>
-<div class="step">5) Envíe captura del resultado al mismo correo</div>
-
-</section>
-
-<!-- CONTACTO -->
-
-<section class="instructions">
-
-<h3>📱 Contacto directo</h3>
-
-<p>
-<a class="whatsapp-link" 
-href="https://wa.me/573202311363" 
-target="_blank">
-WhatsApp: +57 320 2311363
-</a>
-</p>
-
-</section>
-
-<footer>
-
-<p>Millennials Chess Academy</p>
-<p>Reality Check Ajedrez</p>
-
-</footer>
-
-</div>
-
-<script>
-
-function startTest1(){
-window.open(
-"https://millennialschess.github.io/quiz/",
-"_blank"
-);
-}
-
-</script>
-
-<
+        // Pequeña animación adicional para el header
+        window.addEventListener('load', function() {
+            const header = document.querySelector('.header');
+            header.style.opacity = '0';
+            header.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                header.style.transition = 'all 0.8s ease';
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
